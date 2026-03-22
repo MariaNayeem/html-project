@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My To-Do List</title>
+<style>
+/* Basic styling */
+body {
+    font-family: Arial;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 50px;
+}
+
+h1 {
+    color: #333;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px auto;
+    padding: 10px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 400px;
+    border-radius: 5px;
+}
+</style>
+</head>
+<body>
+
+<h1>My To-Do List</h1>
+
+<input type="text" id="task" placeholder="Enter a task">
+<button onclick="addTask()">Add Task</button>
+
+<ul id="taskList"></ul>
+
+<script>
+// Load saved tasks from localStorage
+window.onload = function() {
+    let savedTasks = localStorage.getItem("tasks");
+    if(savedTasks) {
+        document.getElementById("taskList").innerHTML = savedTasks;
+    }
+}
+
+// Add task function
+function addTask() {
+    let input = document.getElementById("task");
+    let task = input.value.trim();
+
+    if(task === ""){
+        alert("Please enter a task!");
+        return;
+    }
+
+    // Create list item
+    let li = document.createElement("li");
+
+    // Create checkbox
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.onclick = function() {
+        if(this.checked){
+            li.style.textDecoration = "line-through";
+        } else {
+            li.style.textDecoration = "none";
+        }
+        saveTasks();
+    };
+
+    // Task text
+    let span = document.createElement("span");
+    span.innerText = task;
+
+    // Delete button
+    let deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "Delete";
+    deleteBtn.onclick = function() {
+        li.remove();
+        saveTasks();
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+
+    document.getElementById("taskList").appendChild(li);
+
+    // Clear input
+    input.value = "";
+
+    saveTasks();
+}
+
+// Press Enter to add task
+document.getElementById("task").addEventListener("keypress", function(event){
+    if(event.key === "Enter"){
+        addTask();
+    }
+});
+
+// Save tasks to localStorage
+function saveTasks() {
+    localStorage.setItem("tasks", document.getElementById("taskList").innerHTML);
+}
+</script>
+
+</body>
+</html>
